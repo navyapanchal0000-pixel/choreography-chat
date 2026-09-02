@@ -8,6 +8,13 @@
       "when": 1788340832142,
       "tag": "0000_create_choreography_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788340857031,
+      "tag": "0001_chat_media_storage_policies",
+      "breakpoints": true
     }
   ]
 }
