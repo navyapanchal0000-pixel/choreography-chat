@@ -49,13 +49,7 @@ export const ensureMaster = createServerFn({ method: "POST" })
     return { created: true };
   });
 
-async function assertMaster(supabase: {
-  from: (t: string) => {
-    select: (c: string) => {
-      eq: (k: string, v: string) => { maybeSingle: () => Promise<{ data: unknown }> };
-    };
-  };
-}, userId: string) {
+async function assertMaster(userId: string) {
   const db = await admin();
   const { data } = await db
     .from("profiles")
