@@ -72,7 +72,7 @@ export const addUser = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    const master = await assertMaster(context.supabase as never, context.userId);
+    const master = await assertMaster(context.userId);
     const db = await admin();
     const email = data.email.toLowerCase();
 
@@ -110,7 +110,7 @@ export const signOutUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const master = await assertMaster(context.supabase as never, context.userId);
+    const master = await assertMaster(context.userId);
     const db = await admin();
     const { data: target } = await db
       .from("profiles")
@@ -138,7 +138,7 @@ export const deleteUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => z.object({ userId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    const master = await assertMaster(context.supabase as never, context.userId);
+    const master = await assertMaster(context.userId);
     const db = await admin();
     const { data: target } = await db
       .from("profiles")
