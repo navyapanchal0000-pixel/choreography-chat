@@ -112,7 +112,7 @@ export const addUser = createServerFn({ method: "POST" })
       target_name: data.name,
       detail: email,
     });
-    return { id: created.user.id };
+    return { id: userId };
   });
 
 export const signOutUser = createServerFn({ method: "POST" })
