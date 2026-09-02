@@ -14,13 +14,110 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      activity_logs: {
+        Row: {
+          action: string
+          actor_name: string | null
+          created_at: string
+          detail: string | null
+          id: string
+          target_name: string | null
+        }
+        Insert: {
+          action: string
+          actor_name?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          target_name?: string | null
+        }
+        Update: {
+          action?: string
+          actor_name?: string | null
+          created_at?: string
+          detail?: string | null
+          id?: string
+          target_name?: string | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          attachment_name: string | null
+          attachment_type: string | null
+          attachment_url: string | null
+          content: string | null
+          created_at: string
+          id: string
+          sender_id: string
+          sender_name: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          content?: string | null
+          created_at?: string
+          id?: string
+          sender_id: string
+          sender_name: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          content?: string | null
+          created_at?: string
+          id?: string
+          sender_id?: string
+          sender_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          force_signout_at: string | null
+          id: string
+          is_master: boolean
+          last_seen: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          force_signout_at?: string | null
+          id: string
+          is_master?: boolean
+          last_seen?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          force_signout_at?: string | null
+          id?: string
+          is_master?: boolean
+          last_seen?: string
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_master: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
