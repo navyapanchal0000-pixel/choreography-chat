@@ -87,15 +87,24 @@ export const addUser = createServerFn({ method: "POST" })
       password: data.password,
       email_confirm: true,
     });
-    if (error || !created?.user) throw new Error(error?.message ?? "Could not create the user");
+
+    let userId = created?.user?.id;
+    if (!userId) {
+      // The auth account may already exist from a previously deleted member.
+      const { data: list } = await db.auth.admin.listUsers({ page: 1, perPage: 200 });
+      userId = list?.users.find((u) => u.email?.toLowerCase() === email)?.id;
+      if (!userId) throw new Error(error?.message ?? "Could not create the user");
+      await db.auth.admin.updateUserById(userId, {
+        password: data.password,
+        email_confirm: true,
+      });
+    }
 
     const { error: profileError } = await db
       .from("profiles")
-      .insert({ id: created.user.id, email, name: data.name, is_master: false });
-    if (profileError) {
-      await db.auth.admin.deleteUser(created.user.id);
-      throw new Error(profileError.message);
-    }
+      .insert({ id: userId, email, name: data.name, is_master: false });
+    if (profileError) throw new Error(profileError.message);
+
 
     await db.from("activity_logs").insert({
       action: "user_added",
